@@ -1,0 +1,18 @@
+.DS_Store
+.Spotlight-V100
+.Trashes
+
+# 4D runtime / generated
+Data/
+Logs/
+Backups/
+Build/
+
+# Local user settings
+userPreferences.*
+
+# General temp/logs
+*.log
+*.tmp
+*.bak
+*.swp
