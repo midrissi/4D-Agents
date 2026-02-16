@@ -1,6 +1,6 @@
 import { SchemaValidator } from "./schema-validator.js";
 import { ToolRegistry } from "./tool-registry.js";
-import type { RunTraceEvent, RuntimePolicy, ToolResult, ToolSpec } from "./types.js";
+import type { RunTraceEvent, RuntimePolicy, ToolResult, ToolResultFailure, ToolSpec } from "./types.js";
 import { nowIso, toErrorMessage } from "./utils.js";
 
 export interface ToolInvocationContext {
@@ -43,10 +43,10 @@ export class ToolInvoker {
       return failure;
     }
 
-    const permissionsResult = this.checkPermissions(tool, agentId);
-    if (!permissionsResult.ok) {
-      await this.emitToolError(runId, agentId, toolId, permissionsResult.error);
-      return permissionsResult;
+    const permissionsFailure = this.checkPermissions(tool, agentId);
+    if (permissionsFailure) {
+      await this.emitToolError(runId, agentId, toolId, permissionsFailure.error);
+      return permissionsFailure;
     }
 
     const inputValidation = this.schemaValidator.ValidateToolInput(tool, input);
@@ -119,7 +119,7 @@ export class ToolInvoker {
     }
   }
 
-  private checkPermissions(tool: ToolSpec, agentId: string): ToolResult {
+  private checkPermissions(tool: ToolSpec, agentId: string): ToolResultFailure | null {
     if (tool.permissions.agentAllowlist && tool.permissions.agentAllowlist.length > 0) {
       if (!tool.permissions.agentAllowlist.includes(agentId)) {
         return this.failure("TOOL_NOT_ALLOWED", `Agent "${agentId}" is not allowed to invoke tool "${tool.id}".`);
@@ -133,10 +133,7 @@ export class ToolInvoker {
       );
     }
 
-    return {
-      ok: true,
-      data: {},
-    };
+    return null;
   }
 
   private normalizeResult(rawOutput: unknown): ToolResult {
@@ -182,7 +179,7 @@ export class ToolInvoker {
     ]);
   }
 
-  private failure(code: string, message: string, details?: unknown): ToolResult {
+  private failure(code: string, message: string, details?: unknown): ToolResultFailure {
     return {
       ok: false,
       error: {

@@ -1,11 +1,17 @@
-import Ajv, { type ErrorObject, type ValidateFunction } from "ajv";
-import addFormats from "ajv-formats";
+import Ajv2020Module from "ajv/dist/2020.js";
+import type { ErrorObject, ValidateFunction } from "ajv";
+import addFormatsModule from "ajv-formats";
 import agentSchema from "./schemas/agent.schema.json" with { type: "json" };
 import toolSchema from "./schemas/tool.schema.json" with { type: "json" };
 import peerSchema from "./schemas/peer.schema.json" with { type: "json" };
 import runTraceEventSchema from "./schemas/run-trace-event.schema.json" with { type: "json" };
 import a2aEnvelopeSchema from "./schemas/a2a-envelope.schema.json" with { type: "json" };
 import type { AgentSpec, A2AEnvelope, PeerSpec, ToolSpec, ValidationResult } from "./types.js";
+
+const Ajv2020Constructor = Ajv2020Module as unknown as new (options?: Record<string, unknown>) => {
+  compile: <TSchema = unknown>(schema: unknown) => ValidateFunction<TSchema>;
+};
+const addFormats = addFormatsModule as unknown as (ajv: unknown) => void;
 
 function formatErrors(errors: ErrorObject[] | null | undefined): string[] {
   if (!errors || errors.length === 0) {
@@ -26,7 +32,9 @@ function toValidationResult(isValid: boolean, validate: ValidateFunction): Valid
 }
 
 export class SchemaValidator {
-  private readonly ajv: Ajv;
+  private readonly ajv: {
+    compile: <TSchema = unknown>(schema: unknown) => ValidateFunction<TSchema>;
+  };
   private readonly validateAgentSpec: ValidateFunction<AgentSpec>;
   private readonly validateToolSpec: ValidateFunction<ToolSpec>;
   private readonly validatePeerSpec: ValidateFunction<PeerSpec>;
@@ -35,7 +43,7 @@ export class SchemaValidator {
   private readonly dynamicValidatorCache: Map<string, ValidateFunction>;
 
   constructor() {
-    this.ajv = new Ajv({ allErrors: true, strict: true });
+    this.ajv = new Ajv2020Constructor({ allErrors: true, strict: true });
     addFormats(this.ajv);
     this.dynamicValidatorCache = new Map();
 
