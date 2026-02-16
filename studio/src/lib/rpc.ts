@@ -11,7 +11,7 @@ export interface RpcTransport {
 export class RpcClient {
   constructor(private readonly transport: RpcTransport) {}
 
-  async call<TResult, TParams extends RpcParams = RpcParams>(method: string, params: TParams): Promise<TResult> {
+  async call<TResult, TParams = unknown>(method: string, params: TParams): Promise<TResult> {
     const request: RpcRequest<TParams> = {
       id: uuidv4(),
       method,
