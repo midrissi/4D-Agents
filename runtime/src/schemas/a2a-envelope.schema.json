@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4d-agents.dev/schemas/a2a-envelope.schema.json",
+  "title": "A2AEnvelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "ts", "fromAgentId", "toAgentId", "type", "payload"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fromAgentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "toAgentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "message",
+        "toolRequest",
+        "toolResult",
+        "capability",
+        "health",
+        "error"
+      ]
+    },
+    "traceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

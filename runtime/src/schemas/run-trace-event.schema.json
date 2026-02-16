@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4d-agents.dev/schemas/run-trace-event.schema.json",
+  "title": "RunTraceEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ts", "type", "runId", "agentId", "payload"],
+  "properties": {
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "messageAdded",
+        "toolCallRequested",
+        "toolCallStarted",
+        "toolCallFinished",
+        "error"
+      ]
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
