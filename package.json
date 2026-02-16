@@ -1,0 +1,11 @@
+{
+  "name": "4d-agents",
+  "private": true,
+  "workspaces": ["runtime", "studio"],
+  "scripts": {
+    "test:runtime": "npm --workspace runtime test",
+    "build:runtime": "npm --workspace runtime run build",
+    "build:studio": "npm --workspace studio run build",
+    "build": "npm run build:runtime && npm run build:studio"
+  }
+}
