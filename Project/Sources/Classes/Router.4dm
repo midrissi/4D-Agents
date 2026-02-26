@@ -77,9 +77,9 @@ Function _extractParams($path : Text; $routePath : Text; $actualPath : Text) : O
 	var $routeParts:=Split string:C1554($routePath; "/")
 	var $actualParts:=Split string:C1554($actualPath; "/")
 	var $i : Integer
-	For ($i; 1; $routeParts.length)
-		If ($i<=$actualParts.length)
-			var $rp : Variant:=$routeParts[$i-1]
+	For ($i; 0; $routeParts.length-1)
+		If ($i<$actualParts.length)
+			var $rp : Variant:=$routeParts[$i]
 			If (Position:C15(":"; $rp)=1)
 				$params[Substring:C12($rp; 2)]:=$actualParts[$i]
 			End if 
