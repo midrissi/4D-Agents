@@ -60,6 +60,7 @@ $mind.start(New object("port"; 80; "host"; "0.0.0.0"))
 
 ```4d
 // On Web Connection
+// $url and $header are passed by 4D to this database method (e.g. #DECLARE($url : Text; $header : Text; ...))
 If (Position("/api"; $url)=1)
   $mind.getRouter().handle($url; $header)
   Return
