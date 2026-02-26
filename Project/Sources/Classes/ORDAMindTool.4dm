@@ -1,5 +1,5 @@
 // ORDAMindTool
-// Wraps cs.OpenAITool with an executable handler for agent tool calls
+// Wraps cs.AIKit.OpenAITool with an executable handler for agent tool calls
 
 property id : Text
 property name : Text
@@ -7,7 +7,7 @@ property description : Text
 property parameters : Object
 property handler : Variant
 
-property _openAITool : cs.OpenAITool
+property _openAITool : cs.AIKit.OpenAITool
 
 Class constructor($config : Object)
 	If ($config=Null)
@@ -38,10 +38,10 @@ Function _buildOpenAITool()
 	End if
 	$toolConfig.strict:=True
 	
-	This._openAITool:=cs.OpenAITool.new($toolConfig)
+	This._openAITool:=cs.AIKit.OpenAITool.new($toolConfig)
 
 // Returns the OpenAITool for use with OpenAIChatHelper
-Function getOpenAITool() : cs.OpenAITool
+Function getOpenAITool() : cs.AIKit.OpenAITool
 	return This._openAITool
 
 // Returns a handler suitable for registerTool - calls execute() with parsed input

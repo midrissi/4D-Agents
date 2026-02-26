@@ -28,13 +28,14 @@ Function run($input : Object) : Variant
 			: (OB Instance of(This.execute; 4D.Function))
 				return This.execute.call(This; $input)
 			: (Value type(This.execute)=Is object)
-				If (OB Is defined(This.execute; "run"))
-					return This.execute.run($input)
-				Else if (OB Is defined(This.execute; "execute"))
-					return This.execute.execute($input)
-				Else
-					return $input
-				End if
+				Case of
+					: (OB Is defined(This.execute; "run"))
+						return This.execute.run($input)
+					: (OB Is defined(This.execute; "execute"))
+						return This.execute.execute($input)
+					Else
+						return $input
+				End case
 			Else
 				return $input
 		End case
