@@ -4,48 +4,62 @@
 
 property _mind : cs:C1710.App
 property _routes : Collection
+property _prefix : Text
 
-Class constructor($mind : cs:C1710.App)
+Class constructor($mind : cs:C1710.App; $prefix : Text)
 	This:C1470._mind:=$mind
 	This:C1470._routes:=New collection:C1472
+	This:C1470._prefix:=($prefix#Null:C1517) ? $prefix : ""
+	
+Function setPrefix($prefix : Text)
+	This:C1470._prefix:=($prefix#Null:C1517) ? $prefix : ""
 	
 Function setupRoutes()
 	// Agents
-	This:C1470._addRoute("GET"; "/api/agents"; Formula:C1597(This:C1470._listAgents($1; $2)))
-	This:C1470._addRoute("GET"; "/api/agents/:agentId"; Formula:C1597(This:C1470._getAgent($1; $2)))
-	This:C1470._addRoute("POST"; "/api/agents/:agentId/generate"; Formula:C1597(This:C1470._agentGenerate($1; $2)))
-	This:C1470._addRoute("POST"; "/api/agents/:agentId/stream"; Formula:C1597(This:C1470._agentStream($1; $2)))
-	This:C1470._addRoute("GET"; "/api/agents/:agentId/tools"; Formula:C1597(This:C1470._listAgentTools($1; $2)))
-	This:C1470._addRoute("POST"; "/api/agents/:agentId/tools/:toolId/execute"; Formula:C1597(This:C1470._executeAgentTool($1; $2)))
+	This:C1470._addRoute("GET"; "/agents"; Formula:C1597(This:C1470._listAgents($1; $2)))
+	This:C1470._addRoute("GET"; "/agents/:agentId"; Formula:C1597(This:C1470._getAgent($1; $2)))
+	This:C1470._addRoute("POST"; "/agents/:agentId/generate"; Formula:C1597(This:C1470._agentGenerate($1; $2)))
+	This:C1470._addRoute("POST"; "/agents/:agentId/stream"; Formula:C1597(This:C1470._agentStream($1; $2)))
+	This:C1470._addRoute("GET"; "/agents/:agentId/tools"; Formula:C1597(This:C1470._listAgentTools($1; $2)))
+	This:C1470._addRoute("POST"; "/agents/:agentId/tools/:toolId/execute"; Formula:C1597(This:C1470._executeAgentTool($1; $2)))
 	// Workflows
-	This:C1470._addRoute("GET"; "/api/workflows"; Formula:C1597(This:C1470._listWorkflows($1; $2)))
-	This:C1470._addRoute("GET"; "/api/workflows/:workflowId"; Formula:C1597(This:C1470._getWorkflow($1; $2)))
-	This:C1470._addRoute("POST"; "/api/workflows/:workflowId/create-run"; Formula:C1597(This:C1470._workflowCreateRun($1; $2)))
-	This:C1470._addRoute("POST"; "/api/workflows/:workflowId/start-async"; Formula:C1597(This:C1470._workflowStartAsync($1; $2)))
-	This:C1470._addRoute("POST"; "/api/workflows/:workflowId/stream"; Formula:C1597(This:C1470._workflowStream($1; $2)))
-	This:C1470._addRoute("POST"; "/api/workflows/:workflowId/resume"; Formula:C1597(This:C1470._workflowResume($1; $2)))
-	This:C1470._addRoute("GET"; "/api/workflows/:workflowId/runs"; Formula:C1597(This:C1470._listWorkflowRuns($1; $2)))
-	This:C1470._addRoute("GET"; "/api/workflows/:workflowId/runs/:runId"; Formula:C1597(This:C1470._getWorkflowRun($1; $2)))
+	This:C1470._addRoute("GET"; "/workflows"; Formula:C1597(This:C1470._listWorkflows($1; $2)))
+	This:C1470._addRoute("GET"; "/workflows/:workflowId"; Formula:C1597(This:C1470._getWorkflow($1; $2)))
+	This:C1470._addRoute("POST"; "/workflows/:workflowId/create-run"; Formula:C1597(This:C1470._workflowCreateRun($1; $2)))
+	This:C1470._addRoute("POST"; "/workflows/:workflowId/start-async"; Formula:C1597(This:C1470._workflowStartAsync($1; $2)))
+	This:C1470._addRoute("POST"; "/workflows/:workflowId/stream"; Formula:C1597(This:C1470._workflowStream($1; $2)))
+	This:C1470._addRoute("POST"; "/workflows/:workflowId/resume"; Formula:C1597(This:C1470._workflowResume($1; $2)))
+	This:C1470._addRoute("GET"; "/workflows/:workflowId/runs"; Formula:C1597(This:C1470._listWorkflowRuns($1; $2)))
+	This:C1470._addRoute("GET"; "/workflows/:workflowId/runs/:runId"; Formula:C1597(This:C1470._getWorkflowRun($1; $2)))
 	// Tools
-	This:C1470._addRoute("GET"; "/api/tools"; Formula:C1597(This:C1470._listTools($1; $2)))
-	This:C1470._addRoute("GET"; "/api/tools/:toolId"; Formula:C1597(This:C1470._getTool($1; $2)))
-	This:C1470._addRoute("POST"; "/api/tools/:toolId/execute"; Formula:C1597(This:C1470._executeTool($1; $2)))
+	This:C1470._addRoute("GET"; "/tools"; Formula:C1597(This:C1470._listTools($1; $2)))
+	This:C1470._addRoute("GET"; "/tools/:toolId"; Formula:C1597(This:C1470._getTool($1; $2)))
+	This:C1470._addRoute("POST"; "/tools/:toolId/execute"; Formula:C1597(This:C1470._executeTool($1; $2)))
 	// Telemetry
-	This:C1470._addRoute("GET"; "/api/telemetry/traces"; Formula:C1597(This:C1470._listTraces($1; $2)))
-	This:C1470._addRoute("GET"; "/api/telemetry/traces/:traceId"; Formula:C1597(This:C1470._getTrace($1; $2)))
-	This:C1470._addRoute("GET"; "/api/telemetry/traces/:traceId/spans"; Formula:C1597(This:C1470._getTraceSpans($1; $2)))
+	This:C1470._addRoute("GET"; "/telemetry/traces"; Formula:C1597(This:C1470._listTraces($1; $2)))
+	This:C1470._addRoute("GET"; "/telemetry/traces/:traceId"; Formula:C1597(This:C1470._getTrace($1; $2)))
+	This:C1470._addRoute("GET"; "/telemetry/traces/:traceId/spans"; Formula:C1597(This:C1470._getTraceSpans($1; $2)))
 	// Logs
-	This:C1470._addRoute("GET"; "/api/logs"; Formula:C1597(This:C1470._listLogs($1; $2)))
-	This:C1470._addRoute("GET"; "/api/logs/:runId"; Formula:C1597(This:C1470._getLogsByRun($1; $2)))
+	This:C1470._addRoute("GET"; "/logs"; Formula:C1597(This:C1470._listLogs($1; $2)))
+	This:C1470._addRoute("GET"; "/logs/:runId"; Formula:C1597(This:C1470._getLogsByRun($1; $2)))
 	// Scorers
-	This:C1470._addRoute("GET"; "/api/scorers"; Formula:C1597(This:C1470._listScorers($1; $2)))
-	This:C1470._addRoute("GET"; "/api/scorers/:scorerId/scores"; Formula:C1597(This:C1470._getScorerScores($1; $2)))
+	This:C1470._addRoute("GET"; "/scorers"; Formula:C1597(This:C1470._listScorers($1; $2)))
+	This:C1470._addRoute("GET"; "/scorers/:scorerId/scores"; Formula:C1597(This:C1470._getScorerScores($1; $2)))
 	// A2A
-	This:C1470._addRoute("POST"; "/api/a2a"; Formula:C1597(This:C1470._a2aRequest($1; $2)))
-	This:C1470._addRoute("GET"; "/api/a2a/cards"; Formula:C1597(This:C1470._a2aCards($1; $2)))
+	This:C1470._addRoute("POST"; "/a2a"; Formula:C1597(This:C1470._a2aRequest($1; $2)))
+	This:C1470._addRoute("GET"; "/a2a/cards"; Formula:C1597(This:C1470._a2aCards($1; $2)))
 	
 Function handle($url : Text; $header : Text) : Boolean
-	var $req:=cs:C1710.Request.new($url)
+	// Strip router prefix so routes (e.g. "/agents") match without prefix
+	var $path : Text:=$url
+	If (Length:C16(This:C1470._prefix)>0) && (Position:C15(This:C1470._prefix; $url)=1)
+		$path:=Substring:C12($url; Length:C16(This:C1470._prefix)+1)
+	Else 
+		If (Length:C16(This:C1470._prefix)>0)
+			return True:C214
+		End if 
+	End if 
+	var $req:=cs:C1710.Request.new($path; This:C1470._prefix)
 	var $res:=cs:C1710.Response.new()
 	
 	var $route:=This:C1470._matchRoute($req.method; $req.path)

@@ -65,17 +65,17 @@ Function start($settings : Object)
 		return
 	End if
 	
-	This._router:=cs.Router.new(This)
+	This._router:=cs.Router.new(This; "")
 	This._router.setupRoutes()
 	
 	// Store router for host's On Web Connection to call
-	// Host implements: If Position("/api"; $url)=1 Then cs.Router.me.handle($url; $header)
-	// The router instance is held by ; host gets it via $mind.getRouter()
+	// Host implements: $prefix:="/api" (or /ordamind, /api/v1...); If Position($prefix; $url)=1 Then $mind.getRouter($prefix).handle($url; $header)
 	This._started:=True
 	
 	If (This.logger#Null) && ($settings#Null)
 		This.logger.info(" started"; New object("port"; $settings.port; "host"; $settings.host))
 	End if
 
-Function getRouter() : cs.Router
+Function getRouter($prefix : Text) : cs.Router
+	This._router.setPrefix($prefix)
 	return This._router

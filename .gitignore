@@ -7,6 +7,7 @@ Data/
 Logs/
 Backups/
 Build/
+Components/
 
 # Local user settings
 userPreferences.*

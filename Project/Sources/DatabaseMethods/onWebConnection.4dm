@@ -16,8 +16,10 @@ $mind:=cs:C1710.App.new(New object:C1471(\
 "logger"; cs:C1710.Logger.new(New object:C1471("name"; "ORDAMind"; "level"; "info"))\
 ))
 
-If (Position:C15("/api"; $url)=1)
+var $prefix : Text:="/api"
+
+If (Position:C15($prefix; $url)=1)
 	$mind.start()
-	$mind.getRouter().handle($url; $header)
+	$mind.getRouter($prefix).handle($url; $header)
 	return 
 End if 

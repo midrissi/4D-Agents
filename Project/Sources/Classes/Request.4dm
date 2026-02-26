@@ -9,9 +9,12 @@ property query : Object
 property body : Object
 property headers : Object
 
-Class constructor($url : Text)
+property _prefix : Text
+
+Class constructor($url : Text; $prefix : Text)
 	This:C1470.url:=$url
 	This:C1470.path:=$url
+	This:C1470._prefix:=($prefix#Null) ? $prefix : ""
 	This:C1470.params:=New object:C1471
 	This:C1470.query:=New object:C1471
 	This:C1470.body:=New object:C1471
@@ -38,11 +41,17 @@ Function _parse()
 		End case 
 	End for 
 	
+	// Strip router prefix so path/url are always without prefix (e.g. for route matching)
+	If (Length:C16(This:C1470._prefix)>0) && (Position:C15(This:C1470._prefix; This:C1470.path)=1)
+		This:C1470.path:=Substring:C12(This:C1470.path; Length:C16(This:C1470._prefix)+1)
+		This:C1470.url:=Substring:C12(This:C1470.url; Length:C16(This:C1470._prefix)+1)
+	End if 
+	
 	If (This:C1470.method="")
 		This:C1470.method:="GET"
 	End if 
 	
-	// Parse query string from path (path may be /api/agents?foo=bar)
+	// Parse query string from path (path may be /agents?foo=bar)
 	var $parts:=Split string:C1554(This:C1470.path; "?")
 	If ($parts.length>=2)
 		This:C1470.path:=$parts[1]
