@@ -1,4 +1,4 @@
-// ORDAMindLogger
+// Logger
 // Wraps 4D LOG EVENT or file-based logging
 // Levels: debug, info, warn, error
 
@@ -11,7 +11,7 @@ Class constructor($config : Object)
 		return
 	End if
 	
-	This.name:=($config.name#Null) ? $config.name : "ORDAMind"
+	This.name:=($config.name#Null) ? $config.name : ""
 	This.level:=($config.level#Null) ? $config.level : "info"
 	This._levelOrder:=This._levelToOrder(This.level)
 

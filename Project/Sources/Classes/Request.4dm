@@ -1,4 +1,4 @@
-// ORDAMindRequest
+// Request
 // Request wrapper - parses from WEB GET HTTP HEADER, WEB GET HTTP BODY
 
 property method : Text

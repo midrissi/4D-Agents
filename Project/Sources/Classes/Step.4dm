@@ -1,4 +1,4 @@
-// ORDAMindStep
+// Step
 // Workflow step with id, description, schemas, and execute Formula
 
 property id : Text
@@ -42,6 +42,6 @@ Function run($input : Object) : Variant
 	Catch
 		// Re-raise with context
 		var $err:=Last errors:C1799.last()
-		throw:C1805(1; "ORDAMindStep '"+This:C1470.id+"' failed: "+$err.message)
+		throw:C1805(1; "Step '"+This:C1470.id+"' failed: "+$err.message)
 	End try
 	

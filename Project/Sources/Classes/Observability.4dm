@@ -1,8 +1,8 @@
-// ORDAMindObservability
+// Observability
 // Trace/span model for debugging and basic dashboards
 // startTrace, startSpan, endSpan, recordEvent
 
-property _storage : cs.ORDAMindStorageBase
+property _storage : cs.StorageBase
 property _currentTrace : Object
 property _currentSpan : Object
 property _spans : Collection

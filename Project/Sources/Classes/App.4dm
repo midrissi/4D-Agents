@@ -1,15 +1,15 @@
-// ORDAMind
+// App
 // Central entry point - wires agents, workflows, tools, scorers, storage, logger, observability
 
 property agents : Object
 property workflows : Object
 property tools : Object
 property scorers : Object
-property storage : cs.ORDAMindStorageBase
-property logger : cs.ORDAMindLogger
-property observability : cs.ORDAMindObservability
+property storage : cs.StorageBase
+property logger : cs.Logger
+property observability : cs.Observability
 
-property _router : cs.ORDAMindRouter
+property _router : cs.Router
 property _started : Boolean
 
 Class constructor($config : Object)
@@ -27,37 +27,37 @@ Class constructor($config : Object)
 	
 	This._started:=False
 
-Function getAgent($id : Text) : cs.ORDAMindAgent
+Function getAgent($id : Text) : cs.Agent
 	If (This.agents[$id]#Null)
 		return This.agents[$id]
 	End if
 	return Null
 
-Function getWorkflow($id : Text) : cs.ORDAMindWorkflow
+Function getWorkflow($id : Text) : cs.Workflow
 	If (This.workflows[$id]#Null)
 		return This.workflows[$id]
 	End if
 	return Null
 
-Function getTool($id : Text) : cs.ORDAMindTool
+Function getTool($id : Text) : cs.Tool
 	If (This.tools[$id]#Null)
 		return This.tools[$id]
 	End if
 	return Null
 
-Function getScorer($id : Text) : cs.ORDAMindScorer
+Function getScorer($id : Text) : cs.Scorer
 	If (This.scorers[$id]#Null)
 		return This.scorers[$id]
 	End if
 	return Null
 
-Function getStorage() : cs.ORDAMindStorageBase
+Function getStorage() : cs.StorageBase
 	return This.storage
 
-Function getLogger() : cs.ORDAMindLogger
+Function getLogger() : cs.Logger
 	return This.logger
 
-Function getObservability() : cs.ORDAMindObservability
+Function getObservability() : cs.Observability
 	return This.observability
 
 Function start($settings : Object)
@@ -65,17 +65,17 @@ Function start($settings : Object)
 		return
 	End if
 	
-	This._router:=cs.ORDAMindRouter.new(This)
+	This._router:=cs.Router.new(This)
 	This._router.setupRoutes()
 	
 	// Store router for host's On Web Connection to call
-	// Host implements: If Position("/api"; $url)=1 Then cs.ORDAMindRouter.me.handle($url; $header)
-	// The router instance is held by ORDAMind; host gets it via $mind.getRouter()
+	// Host implements: If Position("/api"; $url)=1 Then cs.Router.me.handle($url; $header)
+	// The router instance is held by ; host gets it via $mind.getRouter()
 	This._started:=True
 	
 	If (This.logger#Null) && ($settings#Null)
-		This.logger.info("ORDAMind started"; New object("port"; $settings.port; "host"; $settings.host))
+		This.logger.info(" started"; New object("port"; $settings.port; "host"; $settings.host))
 	End if
 
-Function getRouter() : cs.ORDAMindRouter
+Function getRouter() : cs.Router
 	return This._router

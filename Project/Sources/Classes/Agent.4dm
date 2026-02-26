@@ -1,4 +1,4 @@
-// ORDAMindAgent
+// Agent
 // Wraps OpenAIChatHelper with declarative config (instructions, model, tools)
 
 property id : Text
@@ -48,10 +48,10 @@ Function _buildHelper()
 	This._helper:=This._client.chat.create(This.instructions; $parameters)
 	This._helper.autoHandleToolCalls:=True
 	
-	// Register ORDAMindTools
-	var $tool : cs.ORDAMindTool
+	// Register Tools
+	var $tool : cs.Tool
 	For each ($tool; This.tools)
-		If (OB Instance of($tool; cs.ORDAMindTool))
+		If (OB Instance of($tool; cs.Tool))
 			This._helper.registerTool($tool.getOpenAITool(); $tool.getHandler())
 		End if 
 	End for each 
@@ -78,9 +78,9 @@ Function stream($messages : Collection; $parameters : Object) : cs.AIKit.OpenAIC
 	$streamHelper.autoHandleToolCalls:=True
 	
 	// Register tools
-	var $tool : cs.ORDAMindTool
+	var $tool : cs.Tool
 	For each ($tool; This.tools)
-		If (OB Instance of($tool; cs.ORDAMindTool))
+		If (OB Instance of($tool; cs.Tool))
 			$streamHelper.registerTool($tool.getOpenAITool(); $tool.getHandler())
 		End if 
 	End for each 

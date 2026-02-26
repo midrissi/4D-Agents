@@ -1,4 +1,4 @@
-// ORDAMindWorkflow
+// Workflow
 // Workflow engine with .then(), .parallel(), .branch()
 // run($input) executes the graph
 
@@ -17,17 +17,17 @@ Class constructor($config : Object)
 	This:C1470._nodes:=New collection:C1472
 	
 	// Sequential: add step, output of N is input to N+1
-Function then($step : cs:C1710.ORDAMindStep) : cs:C1710.ORDAMindWorkflow
+Function then($step : cs:C1710.Step) : cs:C1710.Workflow
 	This:C1470._nodes.push(New object:C1471("type"; "step"; "data"; $step))
 	return This:C1470
 	
 	// Parallel: run steps simultaneously, next receives object keyed by step id
-Function parallel($steps : Collection) : cs:C1710.ORDAMindWorkflow
+Function parallel($steps : Collection) : cs:C1710.Workflow
 	This:C1470._nodes.push(New object:C1471("type"; "parallel"; "data"; $steps))
 	return This:C1470
 	
 	// Branch: each branch is [condition Formula, step]; first matching runs
-Function branch($branches : Collection) : cs:C1710.ORDAMindWorkflow
+Function branch($branches : Collection) : cs:C1710.Workflow
 	This:C1470._nodes.push(New object:C1471("type"; "branch"; "data"; $branches))
 	return This:C1470
 	
@@ -39,16 +39,16 @@ Function run($input : Object) : Variant
 		Case of 
 			: ($node.type="step")
 				var $step : Variant:=$node.data
-				If (OB Instance of:C1731($step; cs:C1710.ORDAMindStep))
+				If (OB Instance of:C1731($step; cs:C1710.Step))
 					$current:=$step.run($current)
 				End if 
 				
 			: ($node.type="parallel")
 				var $steps : Variant:=$node.data
 				var $results : Object:=New object:C1471
-				var $s : cs:C1710.ORDAMindStep
+				var $s : cs:C1710.Step
 				For each ($s; $steps)
-					If (OB Instance of:C1731($s; cs:C1710.ORDAMindStep))
+					If (OB Instance of:C1731($s; cs:C1710.Step))
 						$results[$s.id]:=$s.run($current)
 					End if 
 				End for each 
@@ -65,7 +65,7 @@ Function run($input : Object) : Variant
 					$step:=$branch[2]
 					If (OB Instance of:C1731($condition; 4D:C1709.Function))
 						If ($condition.call(Null:C1517; $current))
-							If (OB Instance of:C1731($step; cs:C1710.ORDAMindStep))
+							If (OB Instance of:C1731($step; cs:C1710.Step))
 								$current:=$step.run($current)
 							End if 
 							break

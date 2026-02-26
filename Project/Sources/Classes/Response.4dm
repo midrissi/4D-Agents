@@ -1,4 +1,4 @@
-// ORDAMindResponse
+// Response
 // Response builder - sends via WEB SEND RAW DATA
 
 property statusCode : Integer
@@ -9,21 +9,21 @@ Class constructor()
 	This:C1470.statusCode:=200
 	This:C1470._headers:=New object:C1471("Content-Type"; "application/json")
 	
-Function status($code : Integer) : cs:C1710.ORDAMindResponse
+Function status($code : Integer) : cs:C1710.Response
 	This:C1470.statusCode:=$code
 	return This:C1470
 	
-Function setHeader($name : Text; $value : Text) : cs:C1710.ORDAMindResponse
+Function setHeader($name : Text; $value : Text) : cs:C1710.Response
 	This:C1470._headers[$name]:=$value
 	return This:C1470
 	
-Function json($object : Object) : cs:C1710.ORDAMindResponse
+Function json($object : Object) : cs:C1710.Response
 	This:C1470.setHeader("Content-Type"; "application/json")
 	This:C1470._body:=JSON Stringify:C1217($object)
 	This:C1470._send()
 	return This:C1470
 	
-Function send($body : Text) : cs:C1710.ORDAMindResponse
+Function send($body : Text) : cs:C1710.Response
 	This:C1470._body:=$body
 	This:C1470._send()
 	return This:C1470

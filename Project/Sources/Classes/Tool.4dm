@@ -1,4 +1,4 @@
-// ORDAMindTool
+// Tool
 // Wraps cs.AIKit.OpenAITool with an executable handler for agent tool calls
 
 property id : Text

@@ -1,4 +1,4 @@
-// ORDAMindScorer
+// Scorer
 // LLM-based evaluator for agent runs
 // score($runInput, $runOutput) → preprocess → analyze (LLM) → generateScore → generateReason
 
