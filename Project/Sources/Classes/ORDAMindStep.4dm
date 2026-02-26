@@ -8,39 +8,40 @@ property outputSchema : Object
 property execute : Variant
 
 Class constructor($config : Object)
-	If ($config=Null)
-		return
-	End if
+	If ($config=Null:C1517)
+		return 
+	End if 
 	
-	This.id:=$config.id || $config.name || ""
-	This.description:=($config.description#Null) ? $config.description : ""
-	This.inputSchema:=$config.inputSchema
-	This.outputSchema:=$config.outputSchema
-	This.execute:=$config.execute
-
+	This:C1470.id:=$config.id || $config.name || ""
+	This:C1470.description:=($config.description#Null:C1517) ? $config.description : ""
+	This:C1470.inputSchema:=$config.inputSchema
+	This:C1470.outputSchema:=$config.outputSchema
+	This:C1470.execute:=$config.execute
+	
 Function run($input : Object) : Variant
-	If (This.execute=Null)
+	If (This:C1470.execute=Null:C1517)
 		return $input
-	End if
+	End if 
 	
 	Try
-		Case of
-			: (OB Instance of(This.execute; 4D.Function))
-				return This.execute.call(This; $input)
-			: (Value type(This.execute)=Is object)
-				Case of
-					: (OB Is defined(This.execute; "run"))
-						return This.execute.run($input)
-					: (OB Is defined(This.execute; "execute"))
-						return This.execute.execute($input)
-					Else
+		Case of 
+			: (OB Instance of:C1731(This:C1470.execute; 4D:C1709.Function))
+				return This:C1470.execute.call(This:C1470; $input)
+			: (Value type:C1509(This:C1470.execute)=Is object:K8:27)
+				Case of 
+					: (OB Is defined:C1231(This:C1470.execute; "run"))
+						return This:C1470.execute.run($input)
+					: (OB Is defined:C1231(This:C1470.execute; "execute"))
+						return This:C1470.execute.execute($input)
+					Else 
 						return $input
-				End case
-			Else
+				End case 
+			Else 
 				return $input
-		End case
+		End case 
 	Catch
 		// Re-raise with context
-		var $err:=Last errors.last()
-		throw(1; "ORDAMindStep '"+This.id+"' failed: "+$err.message)
+		var $err:=Last errors:C1799.last()
+		throw:C1805(1; "ORDAMindStep '"+This:C1470.id+"' failed: "+$err.message)
 	End try
+	

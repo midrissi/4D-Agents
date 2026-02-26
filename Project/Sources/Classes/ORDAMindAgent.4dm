@@ -89,14 +89,14 @@ Function stream($messages : Collection; $parameters : Object) : cs.AIKit.OpenAIC
 	If ($messages#Null) && ($messages.length>0)
 		var $i : Integer
 		For ($i; 1; $messages.length-1)
-			var $msg:=$messages[$i]
+			var $msg : Variant:=$messages[$i]
 			If (OB Instance of($msg; cs.AIKit.OpenAIMessage))
 				$streamHelper._pushMessage($msg)
 			Else 
 				$streamHelper._pushMessage(cs.AIKit.OpenAIMessage.new($msg))
 			End if 
 		End for 
-		var $lastMsg:=$messages[$messages.length]
+		var $lastMsg : Variant:=$messages[$messages.length]
 		If (OB Instance of($lastMsg; cs.AIKit.OpenAIMessage))
 			return $streamHelper.prompt($lastMsg)
 		Else 

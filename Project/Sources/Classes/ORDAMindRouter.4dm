@@ -79,7 +79,7 @@ Function _extractParams($path : Text; $routePath : Text; $actualPath : Text) : O
 	var $i : Integer
 	For ($i; 1; $routeParts.length)
 		If ($i<=$actualParts.length)
-			var $rp:=$routeParts[$i]
+			var $rp : Variant:=$routeParts[$i]
 			If (Position(":"; $rp)=1)
 				$params[Substring($rp; 2)]:=$actualParts[$i]
 			End if 
@@ -102,7 +102,7 @@ Function _listAgents($req : cs.ORDAMindRequest; $res : cs.ORDAMindResponse)
 	var $list : Collection:=New collection
 	var $key : Text
 	For each ($key; This._mind.agents)
-		var $agent:=This._mind.agents[$key]
+		var $agent : cs.ORDAMindAgent:=This._mind.agents[$key]
 		$list.push(New object("id"; $agent.id; "name"; $agent.name))
 	End for each 
 	$res.json(New object("data"; $list))
@@ -121,7 +121,7 @@ Function _agentGenerate($req : cs.ORDAMindRequest; $res : cs.ORDAMindResponse)
 		$res.status(404).json(New object("error"; "Agent not found"))
 		return 
 	End if 
-	var $message:=$req.body.message || $req.body.prompt || ""
+	var $message : Text:=$req.body.message || $req.body.prompt || ""
 	If ($message="")
 		$res.status(400).json(New object("error"; "message or prompt required"))
 		return 
@@ -155,11 +155,11 @@ Function _executeAgentTool($req : cs.ORDAMindRequest; $res : cs.ORDAMindResponse
 		$res.status(404).json(New object("error"; "Agent not found"))
 		return 
 	End if 
-	var $toolId:=$req.params.toolId
+	var $toolId : Text:=$req.params.toolId
 	var $tool : cs.ORDAMindTool
 	For each ($tool; $agent.tools)
 		If ($tool.id=$toolId) || ($tool.name=$toolId)
-			var $input:=$req.body.input || $req.body || New object
+			var $input : Object:=$req.body.input || $req.body || New object
 			Try
 				var $result:=$tool.execute($input)
 				$res.json(New object("result"; $result))
@@ -175,7 +175,7 @@ Function _listWorkflows($req : cs.ORDAMindRequest; $res : cs.ORDAMindResponse)
 	var $list : Collection:=New collection
 	var $key : Text
 	For each ($key; This._mind.workflows)
-		var $wf:=This._mind.workflows[$key]
+		var $wf : cs.ORDAMindWorkflow:=This._mind.workflows[$key]
 		$list.push(New object("id"; $wf.id; "name"; $wf.name))
 	End for each 
 	$res.json(New object("data"; $list))
@@ -194,7 +194,7 @@ Function _workflowCreateRun($req : cs.ORDAMindRequest; $res : cs.ORDAMindRespons
 		$res.status(404).json(New object("error"; "Workflow not found"))
 		return 
 	End if 
-	var $input:=$req.body.input || $req.body || New object
+	var $input : Object:=$req.body.input || $req.body || New object
 	// Inject mind so workflow steps can get agents
 	$input._mind:=This._mind
 	Try
@@ -223,7 +223,7 @@ Function _listTools($req : cs.ORDAMindRequest; $res : cs.ORDAMindResponse)
 	var $list : Collection:=New collection
 	var $key : Text
 	For each ($key; This._mind.tools)
-		var $tool:=This._mind.tools[$key]
+		var $tool : cs.ORDAMindTool:=This._mind.tools[$key]
 		$list.push(New object("id"; $tool.id; "name"; $tool.name; "description"; $tool.description))
 	End for each 
 	$res.json(New object("data"; $list))
@@ -242,7 +242,7 @@ Function _executeTool($req : cs.ORDAMindRequest; $res : cs.ORDAMindResponse)
 		$res.status(404).json(New object("error"; "Tool not found"))
 		return 
 	End if 
-	var $input:=$req.body.input || $req.body || New object
+	var $input : Object:=$req.body.input || $req.body || New object
 	Try
 		var $result:=$tool.execute($input)
 		$res.json(New object("result"; $result))
@@ -282,7 +282,7 @@ Function _listScorers($req : cs.ORDAMindRequest; $res : cs.ORDAMindResponse)
 	var $list : Collection:=New collection
 	var $key : Text
 	For each ($key; This._mind.scorers)
-		var $scorer:=This._mind.scorers[$key]
+		var $scorer : cs.ORDAMindScorer:=This._mind.scorers[$key]
 		$list.push(New object("id"; $scorer.id; "name"; $scorer.name))
 	End for each 
 	$res.json(New object("data"; $list))

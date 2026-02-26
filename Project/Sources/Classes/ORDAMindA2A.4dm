@@ -13,9 +13,9 @@ Function handleRequest($body : Object) : Object
 		return This._jsonRpcError(-32700; "Parse error")
 	End if 
 	
-	var $method:=$body.method
-	var $params:=$body.params
-	var $id:=$body.id
+	var $method : Variant:=$body.method
+	var $params : Variant:=$body.params
+	var $id : Text:=$body.id
 	
 	If ($method=Null)
 		return This._jsonRpcError(-32600; "Invalid Request"; $id)
@@ -39,8 +39,8 @@ Function handleRequest($body : Object) : Object
 	
 Function _tasksCreate($params : Object) : Object
 	// Create a new task - delegate to agent
-	var $agentId:=$params.agentId || $params.agent_id
-	var $input:=$params.input || $params
+	var $agentId : Text:=$params.agentId || $params.agent_id
+	var $input : Variant:=$params.input || $params
 	var $agent:=This._mind.getAgent($agentId)
 	If ($agent=Null)
 		return New object("error"; "Agent not found")
