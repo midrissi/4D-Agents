@@ -29,34 +29,6 @@ Function send($body : Text) : cs:C1710.Response
 	return This:C1470
 	
 Function _send()
-	var $statusText:="OK"
-	Case of 
-		: (This:C1470.statusCode=200)
-			$statusText:="OK"
-		: (This:C1470.statusCode=201)
-			$statusText:="Created"
-		: (This:C1470.statusCode=204)
-			$statusText:="No Content"
-		: (This:C1470.statusCode=400)
-			$statusText:="Bad Request"
-		: (This:C1470.statusCode=404)
-			$statusText:="Not Found"
-		: (This:C1470.statusCode=500)
-			$statusText:="Internal Server Error"
-		Else 
-			$statusText:=""
-	End case 
-	
-	var $response:="HTTP/1.1 "+String:C10(This:C1470.statusCode)+" "+$statusText+Char:C90(13)+Char:C90(10)
-	var $key : Text
-	For each ($key; This:C1470._headers)
-		$response:=$response+$key+": "+This:C1470._headers[$key]+Char:C90(13)+Char:C90(10)
-	End for each 
-	$response:=$response+Char:C90(13)+Char:C90(10)
-	$response:=$response+This:C1470._body
-	
-	var $blob : Blob
-	TEXT TO BLOB:C554($response; $blob; UTF8 text without length:K22:17)
-	
-	WEB SEND RAW DATA:C815($blob)
+	var $utils : cs:C1710.HttpUtils:=cs:C1710.HttpUtils.new()
+	$utils.sendRawResponse(This:C1470.statusCode; This:C1470._headers; This:C1470._body)
 	

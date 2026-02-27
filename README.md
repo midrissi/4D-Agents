@@ -220,6 +220,90 @@ Requests are parsed from **WEB GET HTTP HEADER** and **WEB GET HTTP BODY**; the 
 
 ---
 
+## Reverse proxy
+
+The **Proxy** class is a **multi-route** reverse proxy: you register several path prefixes (e.g. `/rest`, `/api`) and their upstream URLs; `handle($url; $header)` matches the **longest** prefix and forwards the request. Use it to expose multiple external APIs under your own origin.
+
+### Setup in On Web Connection
+
+Create one **Proxy**, register routes with **addRoute**, then call **handle** before your app router. If no proxy route matches, `handle` returns **False** and you can fall through to `/api` (mind router):
+
+```4d
+var $proxy : cs:C1710.Proxy:=cs:C1710.Proxy.new()
+$proxy.addRoute("/rest"; "https://rest.example.com"; False)
+$proxy.addRoute("/api-external"; "https://api.other.com"; True)
+If ($proxy.handle($url; $header))
+  Return
+End if
+
+If (Position("/api"; $url)=1)
+  $mind.start()
+  $mind.getRouter("/api").handle($url; $header)
+  Return
+End if
+```
+
+### API
+
+**Constructor:** `cs:C1710.Proxy.new()`  
+No arguments. Creates an empty proxy; add routes with **addRoute**.
+
+**addRoute($pathPrefix : Text; $targetUrl : Text; $keepBaseUrl : Boolean)**  
+Registers a route. When the request path starts with `$pathPrefix`, it is forwarded to `$targetUrl`.
+
+| Parameter | Description |
+|----------|-------------|
+| **$pathPrefix** | Path prefix that triggers this route (e.g. `"/rest"`, `"/api"`). Longest match wins. |
+| **$targetUrl** | Upstream base URL (e.g. `"https://api.example.com"`). Trailing slashes are removed. |
+| **$keepBaseUrl** | **True** → upstream path includes the prefix (e.g. `/rest/foo` → `https://target/rest/foo`). **False** → prefix is stripped (e.g. `/rest/foo` → `https://target/foo`). Default is **True**. |
+
+**handle($url : Text; $header : Text) : Boolean**  
+If `$url` matches a registered prefix, forwards the request to that route’s upstream and returns **True**. Otherwise returns **False** (no response sent).
+
+### Multiple routes example
+
+```4d
+var $proxy : cs:C1710.Proxy:=cs:C1710.Proxy.new()
+$proxy.addRoute("/rest"; "https://rest.example.com"; False)   // /rest/users -> https://rest.example.com/users
+$proxy.addRoute("/proxy"; "https://httpbin.org"; False)       // /proxy/get  -> https://httpbin.org/get
+If ($proxy.handle($url; $header))
+  Return
+End if
+```
+
+### Behaviour
+
+- **Matching:** Longest registered prefix wins (e.g. if you have `/api` and `/api/v1`, a request to `/api/v1/foo` uses `/api/v1`).
+- Method, query string, and body are forwarded; most request headers are forwarded (Host, Connection, Accept-Encoding are not).
+- Response status, headers, and body from the upstream server are sent back to the client.
+- If the upstream is unreachable or returns status `0`, the proxy responds with **502 Bad Gateway**.
+
+---
+
+## HttpUtils (shared helpers)
+
+**`cs:C1710.HttpUtils`** provides shared HTTP helpers used by Request, Response, Router, and Proxy. You can use it in your own code if needed:
+
+| Method | Description |
+|--------|-------------|
+| **statusCodeToText**($status) | Returns status text for a code (200→"OK", 404→"Not Found", 502→"Bad Gateway", etc.). |
+| **sendRawResponse**($statusCode; $headers; $body) | Builds an HTTP/1.1 response and sends it with WEB SEND RAW DATA. |
+| **normalizePath**($p) | Ensures path has a leading slash (or "" if empty). |
+| **normalizeTargetUrl**($url) | Removes trailing slash from a base URL. |
+| **stripPathPrefix**($path; $prefix) | Removes prefix from path (e.g. `/proxy/foo` with prefix `/proxy` → `/foo`). |
+| **parseWebConnectionHeaders**() | Reads WEB GET HTTP HEADER; returns object with `method`, `path`, `headers`. |
+
+Example:
+
+```4d
+var $utils : cs:C1710.HttpUtils
+$utils:=cs:C1710.HttpUtils.new()
+$parsed:=$utils.parseWebConnectionHeaders()  // method, path, headers from current request
+$utils.sendRawResponse(200; New object("Content-Type"; "application/json"); "{}")
+```
+
+---
+
 ## A2A (Agent-to-Agent)
 
 ORDAMind supports the [A2A protocol](https://a2a-protocol.org/) (JSON-RPC 2.0 over HTTP). Use **POST /api/a2a** for requests and **GET /api/a2a/cards** for agent discovery cards.

@@ -52,10 +52,16 @@ Function setupRoutes()
 Function handle($url : Text; $header : Text) : Boolean
 	// Strip router prefix so routes (e.g. "/agents") match without prefix
 	var $path : Text:=$url
-	If (Length:C16(This:C1470._prefix)>0) && (Position:C15(This:C1470._prefix; $url)=1)
-		$path:=Substring:C12($url; Length:C16(This:C1470._prefix)+1)
-	Else 
-		If (Length:C16(This:C1470._prefix)>0)
+	If (Length:C16(This:C1470._prefix)>0)
+		If (Position:C15(This:C1470._prefix; $url)=1)
+			var $utils : cs:C1710.HttpUtils:=cs:C1710.HttpUtils.new()
+			$path:=$utils.stripPathPrefix($url; This:C1470._prefix)
+			If (Length:C16($path)=0)
+				$path:="/"
+			Else 
+				$path:=$utils.normalizePath($path)
+			End if 
+		Else 
 			return True:C214
 		End if 
 	End if 

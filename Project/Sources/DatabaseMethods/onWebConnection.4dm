@@ -18,6 +18,14 @@ $mind:=cs:C1710.App.new(New object:C1471(\
 
 var $prefix : Text:="/api"
 
+// Optional reverse proxy: addRoute(pathPrefix, targetUrl, keepBaseUrl). handle() returns True if a route matched.
+var $proxy : cs:C1710.Proxy:=cs:C1710.Proxy.new()
+$proxy.addRoute("/rest"; "https://httpbin.org"; False:C214)
+$proxy.addRoute("/proxy"; "https://httpbin.org"; False:C214)
+If ($proxy.handle($url; $header))
+	return 
+End if 
+
 If (Position:C15($prefix; $url)=1)
 	$mind.start()
 	$mind.getRouter($prefix).handle($url; $header)

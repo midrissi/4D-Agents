@@ -22,33 +22,24 @@ Class constructor($url : Text; $prefix : Text)
 	This:C1470._parse()
 	
 Function _parse()
-	ARRAY TEXT:C222($fieldArray; 0)
-	ARRAY TEXT:C222($valueArray; 0)
-	WEB GET HTTP HEADER:C697($fieldArray; $valueArray)
-	
-	var $i : Integer
-	For ($i; 1; Size of array:C274($fieldArray))
-		var $name:=$fieldArray{$i}
-		var $value:=$valueArray{$i}
-		Case of 
-			: ($name="X-METHOD")
-				This:C1470.method:=$value
-			: ($name="X-URL")
-				This:C1470.path:=$value
-				This:C1470.url:=$value
-			Else 
-				This:C1470.headers[$name]:=$value
-		End case 
-	End for 
+	var $utils : cs:C1710.HttpUtils:=cs:C1710.HttpUtils.new()
+	var $parsed : Object:=$utils.parseWebConnectionHeaders()
+	This:C1470.method:=$parsed.method
+	This:C1470.path:=$parsed.path
+	This:C1470.url:=$parsed.path
+	This:C1470.headers:=$parsed.headers
 	
 	// Strip router prefix so path/url are always without prefix (e.g. for route matching)
 	If (Length:C16(This:C1470._prefix)>0) && (Position:C15(This:C1470._prefix; This:C1470.path)=1)
-		This:C1470.path:=Substring:C12(This:C1470.path; Length:C16(This:C1470._prefix)+1)
-		This:C1470.url:=Substring:C12(This:C1470.url; Length:C16(This:C1470._prefix)+1)
-	End if 
-	
-	If (This:C1470.method="")
-		This:C1470.method:="GET"
+		This:C1470.path:=$utils.stripPathPrefix(This:C1470.path; This:C1470._prefix)
+		This:C1470.url:=This:C1470.path
+		If (Length:C16(This:C1470.path)=0)
+			This:C1470.path:="/"
+			This:C1470.url:="/"
+		Else 
+			This:C1470.path:=$utils.normalizePath(This:C1470.path)
+			This:C1470.url:=This:C1470.path
+		End if 
 	End if 
 	
 	// Parse query string from path (path may be /agents?foo=bar)
