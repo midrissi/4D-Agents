@@ -1,5 +1,7 @@
 {
 	"providers": {
-		"openAI": {}
+		"LMStudio": {
+			"baseURL": "http://localhost:1234/v1/"
+		}
 	}
 }
