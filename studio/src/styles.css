@@ -1,0 +1,175 @@
+:root {
+  color-scheme: light dark;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app-shell {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+header p {
+  margin-top: 0;
+  opacity: 0.8;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tabs button.active {
+  border-color: #6f9cff;
+  box-shadow: 0 0 0 1px #6f9cff;
+}
+
+.status {
+  padding: 0.75rem;
+  border: 1px solid #666;
+  border-radius: 0.5rem;
+  white-space: pre-wrap;
+}
+
+.panel-grid,
+.run-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1rem;
+}
+
+.side-list {
+  border: 1px solid #666;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.side-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.side-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem;
+}
+
+.side-list li.selected {
+  outline: 1px solid #6f9cff;
+  border-radius: 0.3rem;
+}
+
+.editor {
+  border: 1px solid #666;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+textarea {
+  width: 100%;
+  min-height: 180px;
+  border-radius: 0.4rem;
+  border: 1px solid #777;
+  padding: 0.5rem;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+pre {
+  margin: 0;
+  border: 1px solid #777;
+  border-radius: 0.4rem;
+  padding: 0.5rem;
+  overflow: auto;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.row textarea {
+  min-height: 100px;
+  flex: 1;
+}
+
+label {
+  display: grid;
+  gap: 0.3rem;
+}
+
+select,
+button {
+  border: 1px solid #777;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+button.danger {
+  border-color: #cf5e5e;
+}
+
+.chat {
+  border: 1px solid #666;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  max-height: 260px;
+  overflow: auto;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.chat-message {
+  padding: 0.5rem;
+  border: 1px solid #777;
+  border-radius: 0.5rem;
+}
+
+.chat-message p {
+  margin: 0.2rem 0 0;
+  white-space: pre-wrap;
+}
+
+.role-user {
+  border-color: #6792d8;
+}
+
+.role-assistant {
+  border-color: #73b89b;
+}
+
+.role-tool {
+  border-color: #be8d45;
+}
+
+.trace {
+  display: grid;
+  gap: 0.4rem;
+}
+
+@media (max-width: 960px) {
+  .panel-grid,
+  .run-layout {
+    grid-template-columns: 1fr;
+  }
+}

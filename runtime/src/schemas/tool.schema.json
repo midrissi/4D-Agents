@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4d-agents.dev/schemas/tool.schema.json",
+  "title": "ToolSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "description",
+    "inputSchema",
+    "outputSchema",
+    "binding",
+    "permissions",
+    "timeouts"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inputSchema": {
+      "oneOf": [
+        { "type": "object" },
+        { "type": "boolean" }
+      ]
+    },
+    "outputSchema": {
+      "oneOf": [
+        { "type": "object" },
+        { "type": "boolean" }
+      ]
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "method"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "4dMethod"
+        },
+        "method": {
+          "type": "string",
+          "pattern": "^Tool_[A-Za-z0-9_]+$"
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requiresApproval"],
+      "properties": {
+        "requiresApproval": {
+          "type": "boolean"
+        },
+        "agentAllowlist": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "timeouts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ms"],
+      "properties": {
+        "ms": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}

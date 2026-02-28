@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4d-agents.dev/schemas/agent.schema.json",
+  "title": "AgentSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "description",
+    "systemPrompt",
+    "modelRef",
+    "defaults",
+    "allowedTools",
+    "memory",
+    "policies"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "systemPrompt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "modelRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model", "apiKeyRef"],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri"
+        },
+        "apiKeyRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["temperature", "maxTokens"],
+      "properties": {
+        "temperature": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxTokens": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "allowedTools": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "retentionDays"],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": ["run", "agent", "global"]
+        },
+        "retentionDays": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowExternalHttp", "allowA2A", "piiMode"],
+      "properties": {
+        "allowExternalHttp": {
+          "type": "boolean"
+        },
+        "allowA2A": {
+          "type": "boolean"
+        },
+        "piiMode": {
+          "type": "string",
+          "enum": ["off", "redact", "block"]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@4d-agents/runtime",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "4D Agents runtime core modules",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.0"
+  }
+}

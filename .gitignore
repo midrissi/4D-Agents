@@ -17,3 +17,8 @@ userPreferences.*
 *.tmp
 *.bak
 *.swp
+
+# JS/TS workspaces
+node_modules/
+runtime/dist/
+studio/dist/

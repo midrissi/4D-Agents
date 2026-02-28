@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://4d-agents.dev/schemas/peer.schema.json",
+  "title": "PeerSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "baseUrl", "auth", "policy"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baseUrl": {
+      "type": "string",
+      "format": "uri"
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "keyRef"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["sharedKey", "publicKey"]
+        },
+        "keyRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowIncoming", "allowOutgoing", "rateLimitPerMin"],
+      "properties": {
+        "allowIncoming": {
+          "type": "boolean"
+        },
+        "allowOutgoing": {
+          "type": "boolean"
+        },
+        "rateLimitPerMin": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}
